@@ -32,7 +32,6 @@ public class AnswerController {
         return ResponseEntity.ok(savedAnswer);
     }
 
-    // получение всех ответов пользователя
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Answer>> getUserAnswers(@PathVariable Long userId) {
         List<Answer> answers = answerRepository.findAll()
