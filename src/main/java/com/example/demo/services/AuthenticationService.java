@@ -9,6 +9,7 @@ import com.example.demo.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,17 +68,25 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        // Используем username для аутентификации
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),  // Теперь передаем username
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+
+        // Находим пользователя по username
+        var user = repository.findByUsername(request.getUsername())  // Теперь ищем по username
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + request.getUsername()));
+
+        // Генерируем JWT токен
         var jwtToken = jwtService.generateToken(user);
+
+        // Возвращаем ответ с токеном
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
+
 }
