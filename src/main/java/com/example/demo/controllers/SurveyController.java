@@ -1,8 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Survey;
+import com.example.demo.models.User;
 import com.example.demo.services.SurveyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey) {
-        Survey createdSurvey = surveyService.createSurvey(survey);
+    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey, @AuthenticationPrincipal User user) {
+        Survey createdSurvey = surveyService.createSurvey(survey, user);
         return ResponseEntity.ok(createdSurvey);
     }
 

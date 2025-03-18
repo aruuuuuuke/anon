@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.models.Survey;
+import com.example.demo.models.User;
 import com.example.demo.repositories.SurveyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,8 @@ public class SurveyService {
         this.surveyRepository = surveyRepository;
     }
 
-    public Survey createSurvey(Survey survey) {
+    public Survey createSurvey(Survey survey, User user) {
+        survey.setCreatedBy(user);
         return surveyRepository.save(survey);
     }
 

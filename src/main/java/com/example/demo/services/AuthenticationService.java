@@ -47,10 +47,17 @@ public class AuthenticationService {
         } else {
             throw new IllegalArgumentException("Invalid role selected");
         }
+//        String code = String.format("%06d", new Random().nextInt(999999));
+//        user.setVerificationCode(code);
+//        user.setVerified(false);
+//        sendVerificationEmail(user.getEmail(), code);
+
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         AuthenticationResponse build = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .build();
         return build;
     }
@@ -80,13 +87,23 @@ public class AuthenticationService {
         var user = repository.findByUsername(request.getUsername())  // Теперь ищем по username
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + request.getUsername()));
 
-        // Генерируем JWT токен
         var jwtToken = jwtService.generateToken(user);
 
-        // Возвращаем ответ с токеном
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
+    private void sendVerificationEmail(String email, String code) {
+        // логика отправки email с кодом
+    }
+    public void verifyEmail(String code) {
+        User user = repository.findByVerificationCode(code)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid code"));
+        user.setVerified(true);
+        user.setVerificationCode(null);
+        repository.save(user);
+    }
+
+
 
 }
