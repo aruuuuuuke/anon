@@ -1,10 +1,12 @@
 package com.example.demo.services;
 
 import com.example.demo.models.Survey;
+import com.example.demo.models.User;
 import com.example.demo.repositories.SurveyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +34,16 @@ public class SurveyService {
 
     public Survey updateSurvey(Long id, Survey surveyDetails) {
         Survey survey = surveyRepository.findById(id).orElseThrow();
-        survey.setTitle(surveyDetails.getTitle());
-        survey.setDescription(surveyDetails.getDescription());
+
+        if (surveyDetails.getTitle() != null) {
+            survey.setTitle(surveyDetails.getTitle());
+        }
+        if (surveyDetails.getDescription() != null) {
+            survey.setDescription(surveyDetails.getDescription());
+        }
+
+        survey.setUpdatedAt(LocalDateTime.now());
+
         return surveyRepository.save(survey);
     }
 

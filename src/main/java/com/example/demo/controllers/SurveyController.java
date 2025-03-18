@@ -18,10 +18,11 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey) {
-        Survey createdSurvey = surveyService.createSurvey(survey);
+    public ResponseEntity<Survey> createSurvey(@RequestBody SurveyRequest request) {
+        Survey createdSurvey = surveyService.createSurvey(request);
         return ResponseEntity.ok(createdSurvey);
     }
+
 
     @GetMapping
     public ResponseEntity<List<Survey>> getAllSurveys() {

@@ -33,6 +33,14 @@ public class User implements UserDetails{
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public String getPassword() {
         return password;

@@ -45,4 +45,8 @@ public class ChatService {
         message.setTimestamp(LocalDateTime.now());
         return messageRepository.save(message);
     }
+
+    public List<Chat> getAllChats() {
+        return chatRepository.findAll();
+    }
 }

@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.Chat;
 import com.example.demo.models.Message;
+import com.example.demo.models.Survey;
 import com.example.demo.models.User;
 import com.example.demo.services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class ChatController {
         this.chatService = chatService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Chat>> getAllChats() {
+        List<Chat> chats = chatService.getAllChats();
+        return ResponseEntity.ok(chats);
+    }
     @PostMapping
     public ResponseEntity<Chat> createChat(@RequestBody Chat chat, @AuthenticationPrincipal User user) {
         Chat createdChat = chatService.createChat(chat, user);  // Передаем user из контекста
