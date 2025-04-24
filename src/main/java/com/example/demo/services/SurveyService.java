@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.models.Question;
 import com.example.demo.models.Survey;
 import com.example.demo.models.User;
 import com.example.demo.repositories.SurveyRepository;
@@ -21,14 +22,22 @@ public class SurveyService {
 
     public Survey createSurvey(Survey survey, User user) {
         survey.setCreatedBy(user);
+        if (survey.getQuestions() != null) {
+            for (Question question : survey.getQuestions()) {
+                question.setSurvey(survey);
+            }
+        }
+
         return surveyRepository.save(survey);
     }
+
 
     public List<Survey> getAllSurveys() {
         return surveyRepository.findAll();
     }
 
     public Optional<Survey> getSurveyById(Long id) {
+
         return surveyRepository.findById(id);
     }
 
