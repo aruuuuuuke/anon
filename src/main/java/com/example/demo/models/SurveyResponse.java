@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,10 +21,15 @@ public class SurveyResponse {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
+    private User user;
+
+
+    @ManyToOne
     @JoinColumn(name = "survey_id")
-    private Survey survey;  // опрос, на который был дан отклик
+    private Survey survey;
 
 
     @OneToMany(mappedBy = "surveyResponse", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Answer> answers = new ArrayList<>();  // ответы пользователя на вопросы опроса
+    private List<Answer> answers;
 }

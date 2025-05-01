@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,23 +21,12 @@ public class Answer {
     private String answerContent;  // текст или вариант ответа
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JsonBackReference
+    private Question question;
+
+    private Long selectedOptionId;  // для выбора ответа (например, multiple choice)
 
     @ManyToOne
-    @JoinColumn(name = "question_id")
-    private Question question;  // вопрос, к которому относится этот ответ
-
-    @ManyToOne
-    @JoinColumn(name = "survey_response_id")
-    private SurveyResponse surveyResponse;  // отклик пользователя на этот вопрос
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
+    @JsonIgnore
+    private SurveyResponse surveyResponse;
 }

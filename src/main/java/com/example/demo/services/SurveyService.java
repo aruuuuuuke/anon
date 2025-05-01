@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
+import com.example.demo.models.Option;
 import com.example.demo.models.Question;
 import com.example.demo.models.Survey;
 import com.example.demo.models.User;
 import com.example.demo.repositories.SurveyRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,13 @@ public class SurveyService {
 
     public Survey createSurvey(Survey survey, User user) {
         survey.setCreatedBy(user);
-        if (survey.getQuestions() != null) {
-            for (Question question : survey.getQuestions()) {
-                question.setSurvey(survey);
+
+        for (Question question : survey.getQuestions()) {
+            question.setSurvey(survey);
+            for (Option option : question.getOptions()) {
+                option.setQuestion(question);
             }
         }
-
         return surveyRepository.save(survey);
     }
 

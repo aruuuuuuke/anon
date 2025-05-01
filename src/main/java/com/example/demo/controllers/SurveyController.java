@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.Survey;
 import com.example.demo.models.User;
 import com.example.demo.services.SurveyService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,13 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
-    @PostMapping
-    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey, @AuthenticationPrincipal User user) {
-        Survey createdSurvey = surveyService.createSurvey(survey, user);
-        return ResponseEntity.ok(createdSurvey);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey,
+                                               @AuthenticationPrincipal User user) {
+        Survey saved = surveyService.createSurvey(survey, user);
+        return ResponseEntity.ok(saved);
     }
+
 
     @GetMapping
     public ResponseEntity<List<Survey>> getAllSurveys() {

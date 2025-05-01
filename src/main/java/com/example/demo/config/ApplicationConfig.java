@@ -18,12 +18,15 @@ import org.springframework.security.config.annotation.authentication.configurati
 public class ApplicationConfig {
 
     private final UserRepository repository;
-
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> {
+            System.out.println("🔍 trying to load user: " + username);
+            return repository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        };
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
