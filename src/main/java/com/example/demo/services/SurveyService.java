@@ -1,10 +1,8 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Option;
-import com.example.demo.models.Question;
-import com.example.demo.models.Survey;
-import com.example.demo.models.User;
+import com.example.demo.models.*;
 import com.example.demo.repositories.SurveyRepository;
+import com.example.demo.repositories.SurveyResponseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +14,13 @@ import java.util.Optional;
 @Transactional
 public class SurveyService {
 
+    private final SurveyResponseRepository surveyResponseRepository;
     private final SurveyRepository surveyRepository;
 
-    public SurveyService(SurveyRepository surveyRepository) {
+
+    public SurveyService(SurveyRepository surveyRepository, SurveyResponseRepository surveyResponseRepository) {
         this.surveyRepository = surveyRepository;
+        this.surveyResponseRepository = surveyResponseRepository;
     }
 
     public Survey createSurvey(Survey survey, User user) {
@@ -53,5 +54,9 @@ public class SurveyService {
 
     public void deleteSurvey(Long id) {
         surveyRepository.deleteById(id);
+    }
+    public List<SurveyResponse> getResponsesBySurveyId(Long surveyId) {
+        return surveyResponseRepository.findBySurveyId(surveyId);
+
     }
 }
