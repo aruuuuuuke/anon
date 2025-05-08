@@ -5,6 +5,11 @@ logging:
 server:
   port: 1719
 
+openai:
+  api:
+  url: https://api.openai.com/v1/chat/completions
+
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/jwt_security
@@ -13,7 +18,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
