@@ -1,6 +1,5 @@
 package com.example.demo.analyz;
 
-import com.example.demo.dto.AnalyticsResultDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,45 +20,34 @@ public class OpenAiClient {
     @Value("${openai.api.key}")
     private String apiKey;
 
-    // URL для OpenAI API
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-    public AnalyticsResultDTO analyze(String prompt) {
-        // Подготовка данных для запроса
+    public JsonNode analyzeAsJson(String prompt) {
         Map<String, Object> request = Map.of(
                 "model", "gpt-4-turbo",
                 "messages", List.of(
-                        Map.of("role", "system", "content", "Ты HR-аналитик. Проанализируй ответы сотрудников на опрос и выдай результаты в JSON формате. Структура: статистика, positive, negative, проблемы, и отчет."),
+                        Map.of("role", "system", "content", "Ты HR-аналитик. Проанализируй ответы сотрудников на опрос и выдай результаты в JSON формате. Необходиые поля: статистика(общ.колличество ответов, кол-во положительных ответов, кол-во отрицательных ответов, метки основыных проблем) и отчет(в официальнм формате, включая: название дату и полный отчет с решениями проблем на одну-две страницы)."),
                         Map.of("role", "user", "content", prompt)
                 ),
-                "temperature", 0.1,
-                "max_tokens", 200
+                "temperature", 0.5,
+                "max_tokens", 500
         );
 
-        // Отправка запроса в OpenAI
-        String response = webClient.post()
-                .uri(OPENAI_API_URL) // Указываем API URL
-                .header("Authorization", "Bearer " + apiKey) // добавляем токен OpenAI
+        return webClient.post()
+                .uri(OPENAI_API_URL)
+                .header("Authorization", "Bearer " + apiKey)
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(JsonNode.class)  // Получаем JSON-объект
+                .bodyToMono(JsonNode.class)
                 .map(json -> {
-                    // Логируем весь ответ от OpenAI
-                    String responseText = json.get("choices").get(0).get("message").get("content").asText();
-                    System.out.println("Response from OpenAI: " + responseText);
-                    responseText = responseText.replaceAll("(?s)```json\\s*", ""); // удаляет открывающий тег ```json с переводом строки
-                    responseText = responseText.replaceAll("(?s)```", "");         // удаляет закрывающий тег ```
-
-// Теперь строка должна быть валидным JSON
-                    return responseText;
+                    String content = json.get("choices").get(0).get("message").get("content").asText();
+                    content = content.replaceAll("(?s)```json\\s*", "").replaceAll("(?s)```", "");
+                    try {
+                        return objectMapper.readTree(content);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Невалидный JSON от OpenAI", e);
+                    }
                 })
                 .block();
-        try {
-            // Преобразование JSON-ответа в DTO
-            System.out.println("Cleaned response: " + response);
-            return objectMapper.readValue(response, AnalyticsResultDTO.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка при парсинге ответа от OpenAI", e);
-        }
     }
 }

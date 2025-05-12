@@ -1,6 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dto.AnalyticsResultDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.example.demo.services.SurveyAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,7 @@ public class SurveyAnalyticsController {
     private final SurveyAnalyticsService surveyAnalyticsService;
 
     @GetMapping(value = "/survey/{id}", produces = "application/json")
-    public AnalyticsResultDTO analyzeSurvey(@PathVariable Long id) {
+    public JsonNode analyzeSurvey(@PathVariable Long id) {
         return surveyAnalyticsService.analyzeSurvey(id);
     }
-
 }

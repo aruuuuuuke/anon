@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.analyz.OpenAiClient;
-import com.example.demo.dto.AnalyticsResultDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.example.demo.models.Survey;
 import com.example.demo.models.SurveyResponse;
 import com.example.demo.repositories.SurveyRepository;
@@ -19,7 +19,7 @@ public class SurveyAnalyticsService {
     private final SurveyResponseRepository surveyResponseRepository;
     private final OpenAiClient openAiClient;
 
-    public AnalyticsResultDTO analyzeSurvey(Long surveyId) {
+    public JsonNode analyzeSurvey(Long surveyId) {
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new RuntimeException("Опрос не найден"));
 
@@ -37,7 +37,7 @@ public class SurveyAnalyticsService {
             });
         }
 
-        // Передаем собранный prompt в OpenAiClient для анализа
-        return openAiClient.analyze(prompt.toString());
+        // Передаем собранный prompt в OpenAiClient для анализа и возвращаем JsonNode
+        return openAiClient.analyzeAsJson(prompt.toString());
     }
 }
