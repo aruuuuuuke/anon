@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 import com.example.demo.models.*;
 import com.example.demo.repositories.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +26,12 @@ public class SurveyResponseService {
         Survey survey = surveyRepository.findById(surveyId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
 
+        // 🔒 проверка: уже есть такой отклик?
+        boolean alreadyExists = surveyResponseRepository.existsBySurveyIdAndUserId(surveyId, userId);
+        if (alreadyExists) {
+            throw new RuntimeException("Пользователь уже прошёл этот опрос");
+        }
+
         SurveyResponse surveyResponse = new SurveyResponse();
         surveyResponse.setSurvey(survey);
         surveyResponse.setUser(user);
@@ -44,14 +49,12 @@ public class SurveyResponseService {
                 throw new RuntimeException("Ответ не содержит ID вопроса");
             }
 
-            answer.setSurveyResponse(surveyResponse); // связываем ответ с откликом
+            answer.setSurveyResponse(surveyResponse);
         }
 
         surveyResponse.setAnswers(answers);
-
         return surveyResponseRepository.save(surveyResponse);
     }
-
 
     public List<SurveyResponse> getAllSurveyResponses() {
         return surveyResponseRepository.findAll();

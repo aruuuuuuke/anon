@@ -20,21 +20,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserByUsername(String email) {
-        return userRepository.findByUsername(email)
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public User updateUserByEmail(String email, User updatedUser) {
-        return userRepository.findByEmail(email).map(user -> {
+    public User updateUserById(Long id, User updatedUser) {
+        return userRepository.findById(id).map(user -> {
             user.setUsername(updatedUser.getUsername());
             user.setEmail(updatedUser.getEmail());
+            // если хочешь менять пароль, раскомментируй:
+//            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             return userRepository.save(user);
         }).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public void deleteUserByEmail(String email) {
-        userRepository.findByEmail(email).ifPresent(userRepository::delete);
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
-
 }

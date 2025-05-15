@@ -24,7 +24,9 @@ public class Answer {
     @ManyToOne
     @JsonBackReference
     @NotNull
+    @JoinColumn(name = "question_id")
     private Question question;
+
 
     private Long selectedOptionId;  // для выбора ответа (например, multiple choice)
 

@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface SurveyResponseRepository extends JpaRepository<SurveyResponse, Long> {
     List<SurveyResponse> findBySurveyId(Long surveyId);
+    boolean existsBySurveyIdAndUserId(Long surveyId, Long userId);
+
 
 }
 

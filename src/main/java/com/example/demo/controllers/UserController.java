@@ -24,20 +24,20 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<User> getMyProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(userService.getUserByUsername(userDetails.getUsername()));
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<User> updateMyProfile(@AuthenticationPrincipal UserDetails userDetails,
-                                                @RequestBody User updatedUser) {
-        return ResponseEntity.ok(userService.updateUserByEmail(userDetails.getUsername(), updatedUser));
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUserById(@PathVariable Long id,
+                                               @RequestBody User updatedUser) {
+        return ResponseEntity.ok(userService.updateUserById(id, updatedUser));
     }
 
-    @DeleteMapping("/me")
-    public ResponseEntity<?> deleteMyProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        userService.deleteUserByEmail(userDetails.getUsername());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
         return ResponseEntity.ok().build();
     }
 }
