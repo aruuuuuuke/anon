@@ -38,4 +38,17 @@ public class UserService {
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+
+    public void assignManagerCodeToUser(Long userId, String managerCode) {
+        User manager = userRepository.findByManagerCode(managerCode)
+                .orElseThrow(() -> new UsernameNotFoundException("Manager not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        user.setAssignedManagerCode(managerCode);
+        userRepository.save(user);
+    }
+
+
 }

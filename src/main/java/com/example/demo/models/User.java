@@ -29,6 +29,8 @@ public class User implements UserDetails{
     private Role role;
     private String managerCode;
 
+    private String assignedManagerCode; // 🆕 добавлено это поле
+
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Survey> surveys = new ArrayList<>();
 

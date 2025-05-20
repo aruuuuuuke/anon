@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+        import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/surveys")
@@ -27,10 +27,9 @@ public class SurveyController {
         return ResponseEntity.ok(saved);
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Survey>> getAllSurveys() {
-        List<Survey> surveys = surveyService.getAllSurveys();
+    public ResponseEntity<List<Survey>> getAllSurveys(@AuthenticationPrincipal User user) {
+        List<Survey> surveys = surveyService.getAllSurveys(user);
         return ResponseEntity.ok(surveys);
     }
 

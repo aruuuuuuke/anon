@@ -3,12 +3,12 @@ logging:
     org.springframework: DEBUG
 
 server:
-  port: 1719
+  port: 8080
 
 openai:
   api:
 
-  url: https://api.openai.com/v1/chat/completions
+    url: https://api.openai.com/v1/chat/completions
 
 
 spring:

@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.AssignManagerRequest;
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,10 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/assign-manager")
+    public ResponseEntity<String> assignManager(@RequestBody AssignManagerRequest request, @AuthenticationPrincipal User user) {
+        userService.assignManagerCodeToUser(user.getId(), request.getManagerCode());
+        return ResponseEntity.ok("Manager assigned successfully.");
     }
 }

@@ -35,10 +35,14 @@ public class SurveyService {
         return surveyRepository.save(survey);
     }
 
-
-    public List<Survey> getAllSurveys() {
-        return surveyRepository.findAll();
+    public List<Survey> getAllSurveys(User user) {
+        String managerCode = user.getAssignedManagerCode();
+        if (managerCode == null) {
+            return List.of(); // пользователь не привязан — возвращаем пусто
+        }
+        return surveyRepository.findByCreatedBy_ManagerCode(managerCode);
     }
+
 
     public Optional<Survey> getSurveyById(Long id) {
 
