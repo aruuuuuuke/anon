@@ -34,15 +34,20 @@ public class SurveyService {
         }
         return surveyRepository.save(survey);
     }
-
     public List<Survey> getAllSurveys(User user) {
         String managerCode = user.getAssignedManagerCode();
-        if (managerCode == null) {
-            return List.of(); // пользователь не привязан — возвращаем пусто
-        }
-        return surveyRepository.findByCreatedBy_ManagerCode(managerCode);
-    }
 
+        if (managerCode != null) {
+            // пользователь — подчинённый: получаем опросы менеджера
+            return surveyRepository.findByCreatedBy_ManagerCode(managerCode);
+        } else if (user.getManagerCode() != null) {
+            // пользователь — сам менеджер: получаем свои опросы
+            return surveyRepository.findByCreatedBy(user);
+        } else {
+            // ни assignedManagerCode, ни managerCode — вернём пусто
+            return List.of();
+        }
+    }
 
     public Optional<Survey> getSurveyById(Long id) {
 
